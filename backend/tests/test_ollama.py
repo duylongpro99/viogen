@@ -8,12 +8,16 @@ async def test_ollama_generate_streams_response():
 
     client = OllamaClient()
 
-    # Mock the httpx response
+    # Mock the httpx response - aiter_lines must return an async generator
+    async def mock_aiter_lines():
+        for line in [
+            '{"response": "Hello", "done": false}',
+            '{"response": " world", "done": true}'
+        ]:
+            yield line
+
     mock_response = AsyncMock()
-    mock_response.aiter_lines = AsyncMock(return_value=iter([
-        '{"response": "Hello", "done": false}',
-        '{"response": " world", "done": true}'
-    ]))
+    mock_response.aiter_lines = mock_aiter_lines
     mock_response.__aenter__ = AsyncMock(return_value=mock_response)
     mock_response.__aexit__ = AsyncMock(return_value=None)
 
