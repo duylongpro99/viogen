@@ -21,6 +21,7 @@ A chat-based creative studio where users collaborate with AI specialists to gene
 ## Prerequisites
 
 - Python 3.11+
+- [uv](https://docs.astral.sh/uv/) (Python package manager)
 - Node.js 18+
 - Docker & Docker Compose
 - Ollama with models pulled (e.g., `ollama pull llama3.2`)
@@ -34,7 +35,13 @@ A chat-based creative studio where users collaborate with AI specialists to gene
 npx supabase start
 ```
 
-Save the anon key from the output.
+Then get your keys:
+
+```bash
+supabase status
+```
+
+The "anon key" is the **Publishable** key from the output.
 
 ### 2. Configure Environment
 
@@ -47,8 +54,8 @@ cp .env.example .env
 
 ```bash
 cd backend
-pip install -r requirements.txt
-uvicorn app.main:app --reload --port 8000
+uv sync
+uv run uvicorn app.main:app --reload --port 8000
 ```
 
 ### 4. Start Frontend
@@ -81,7 +88,7 @@ Navigate to http://localhost:3000
 ### Run Tests
 
 ```bash
-cd backend && pytest
+cd backend && uv run pytest
 ```
 
 ### Database Migrations
